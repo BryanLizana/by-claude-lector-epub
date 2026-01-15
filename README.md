@@ -79,6 +79,6 @@ open-epub/
     └── servicios/
 ```
 
-## Licencia
+## Creado
 
-MIT
+Pa' que engañar, está echo por claude.ai (supervisión mía, supongo :v)
