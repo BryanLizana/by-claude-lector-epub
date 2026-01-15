@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lector EPUB/MOBI</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <!-- Barra superior -->
+    <header class="barra-superior">
+        <span class="titulo-app">📖 Lector EPUB</span>
+        <span class="info-libro" id="info-libro"></span>
+        <div class="controles">
+            <button class="boton-icono oculto" id="btn-indice" title="Índice de capítulos">📑</button>
+            <button class="boton-icono oculto" id="btn-configuracion" title="Configuración">⚙️</button>
+            <button class="boton boton-primario" id="btn-abrir">Abrir archivo</button>
+        </div>
+    </header>
+
+    <!-- Barra de progreso -->
+    <div class="barra-progreso oculto" id="barra-progreso">
+        <div class="barra-progreso-relleno" id="progreso-relleno"></div>
+    </div>
+
+    <!-- Contenedor principal -->
+    <main class="contenedor-principal">
+        <!-- Pantalla de bienvenida -->
+        <section class="pantalla-bienvenida" id="pantalla-bienvenida">
+            <h1>Lector de libros digitales</h1>
+            <p>Abre archivos EPUB o MOBI para leer con comodidad</p>
+
+            <div class="zona-drop" id="zona-drop">
+                <div class="zona-drop-contenido">
+                    <span class="zona-drop-icono">📚</span>
+                    <span class="zona-drop-texto">Arrastra un archivo aquí o haz clic para seleccionar</span>
+                    <span class="formatos-soportados">Formatos soportados: EPUB, MOBI, AZW, AZW3</span>
+                </div>
+            </div>
+
+            <input type="file" id="selector-archivo" accept=".epub,.mobi,.azw,.azw3">
+        </section>
+
+        <!-- Contenedor del visor -->
+        <section class="contenedor-visor oculto" id="contenedor-visor"></section>
+    </main>
+
+    <!-- Panel lateral -->
+    <aside class="panel-lateral" id="panel-lateral">
+        <div class="panel-contenido">
+            <!-- Índice de capítulos -->
+            <div class="panel-seccion" id="seccion-indice">
+                <h3>Índice</h3>
+                <ul class="lista-capitulos" id="lista-capitulos"></ul>
+            </div>
+
+            <!-- Configuración de estilos -->
+            <div class="panel-seccion" id="seccion-estilos">
+                <h3>Tipografía</h3>
+
+                <div class="control-grupo">
+                    <label>Tamaño de fuente</label>
+                    <div class="control-rango">
+                        <input type="range" id="control-tamano" min="12" max="36" value="18">
+                        <span class="valor" id="valor-tamano">18px</span>
+                    </div>
+                </div>
+
+                <div class="control-grupo">
+                    <label>Fuente</label>
+                    <select class="control-select" id="control-fuente"></select>
+                </div>
+
+                <div class="control-grupo">
+                    <label>Altura de línea</label>
+                    <div class="control-rango">
+                        <input type="range" id="control-altura-linea" min="1.2" max="2.5" step="0.1" value="1.8">
+                        <span class="valor" id="valor-altura-linea">1.8</span>
+                    </div>
+                </div>
+
+                <div class="control-grupo">
+                    <label>Ancho de columna</label>
+                    <div class="control-rango">
+                        <input type="range" id="control-ancho" min="400" max="1200" step="50" value="800">
+                        <span class="valor" id="valor-ancho">800px</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lectura Biónica -->
+            <div class="panel-seccion" id="seccion-bionica">
+                <h3>Lectura Biónica</h3>
+
+                <div class="control-grupo">
+                    <label>Modo de resaltado</label>
+                    <select class="control-select" id="control-modo-bionica"></select>
+                </div>
+
+                <div class="control-grupo" id="grupo-intensidad-bionica">
+                    <label>Intensidad</label>
+                    <div class="selector-intensidad" id="selector-intensidad">
+                        <button class="intensidad-opcion" data-intensidad="0.3">Suave</button>
+                        <button class="intensidad-opcion activo" data-intensidad="0.5">Media</button>
+                        <button class="intensidad-opcion" data-intensidad="0.7">Fuerte</button>
+                    </div>
+                </div>
+
+                <div class="control-grupo" id="grupo-color-bionica">
+                    <label>Color del resaltado</label>
+                    <div class="selector-color-bionica">
+                        <div class="colores-predefinidos" id="colores-predefinidos">
+                            <button class="color-opcion activo" data-color="inherit" title="Heredar">
+                                <span class="color-muestra color-heredar">A</span>
+                            </button>
+                            <button class="color-opcion" data-color="#e74c3c" title="Rojo">
+                                <span class="color-muestra" style="background:#e74c3c"></span>
+                            </button>
+                            <button class="color-opcion" data-color="#3498db" title="Azul">
+                                <span class="color-muestra" style="background:#3498db"></span>
+                            </button>
+                            <button class="color-opcion" data-color="#27ae60" title="Verde">
+                                <span class="color-muestra" style="background:#27ae60"></span>
+                            </button>
+                            <button class="color-opcion" data-color="#9b59b6" title="Morado">
+                                <span class="color-muestra" style="background:#9b59b6"></span>
+                            </button>
+                            <button class="color-opcion" data-color="#f39c12" title="Naranja">
+                                <span class="color-muestra" style="background:#f39c12"></span>
+                            </button>
+                        </div>
+                        <div class="color-personalizado">
+                            <label>Personalizado:</label>
+                            <input type="color" id="color-bionica-personalizado" value="#000000">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ejemplo-bionica" id="ejemplo-bionica">
+                    <span class="ejemplo-titulo">Vista previa:</span>
+                    <p class="ejemplo-texto" id="texto-ejemplo-bionica">Texto de ejemplo</p>
+                </div>
+            </div>
+
+            <!-- Temas -->
+            <div class="panel-seccion">
+                <h3>Tema</h3>
+                <div class="selector-temas" id="selector-temas">
+                    <div class="tema-opcion tema-claro activo" data-tema="claro">
+                        <div class="muestra"></div>
+                        <span>Claro</span>
+                    </div>
+                    <div class="tema-opcion tema-sepia" data-tema="sepia">
+                        <div class="muestra"></div>
+                        <span>Sepia</span>
+                    </div>
+                    <div class="tema-opcion tema-oscuro" data-tema="oscuro">
+                        <div class="muestra"></div>
+                        <span>Oscuro</span>
+                    </div>
+                    <div class="tema-opcion tema-noche" data-tema="noche">
+                        <div class="muestra"></div>
+                        <span>Noche</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón restablecer -->
+            <div class="panel-seccion">
+                <button class="boton boton-secundario" id="btn-restablecer" style="width: 100%;">
+                    Restablecer configuración
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Pantalla de carga -->
+    <div class="pantalla-carga" id="pantalla-carga">
+        <div class="spinner"></div>
+        <p class="mensaje-carga">Cargando libro...</p>
+    </div>
+
+    <!-- Mensaje de error -->
+    <div class="mensaje-error" id="mensaje-error"></div>
+
+    <!-- Estilos dinámicos del lector -->
+    <style id="estilos-lector"></style>
+
+    <!-- Script principal -->
+    <script type="module" src="js/aplicacion.js"></script>
+</body>
+</html>
