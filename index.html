@@ -6,6 +6,7 @@
     <title>Lector EPUB/MOBI</title>
     <link rel="stylesheet" href="css/estilos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
 </head>
 <body>
     <!-- Barra superior -->
@@ -13,6 +14,7 @@
         <span class="titulo-app">📖 Lector EPUB</span>
         <span class="info-libro" id="info-libro"></span>
         <div class="controles">
+            <button class="boton-icono oculto" id="btn-exportar" title="Descargar con lectura biónica">💾</button>
             <button class="boton-icono oculto" id="btn-indice" title="Índice de capítulos">📑</button>
             <button class="boton-icono oculto" id="btn-configuracion" title="Configuración">⚙️</button>
             <button class="boton boton-primario" id="btn-abrir">Abrir archivo</button>
@@ -190,7 +192,16 @@
     <!-- Estilos dinámicos del lector -->
     <style id="estilos-lector"></style>
 
-    <!-- Script principal -->
-    <script type="module" src="js/aplicacion.js"></script>
+    <!-- Scripts: orden de carga por dependencias (clases base primero) -->
+    <script src="js/analizadores/AnalizadorLibro.js"></script>
+    <script src="js/analizadores/AnalizadorEpub.js"></script>
+    <script src="js/analizadores/AnalizadorMobi.js"></script>
+    <script src="js/controladores/ControladorEstilos.js"></script>
+    <script src="js/controladores/ControladorLecturaBionica.js"></script>
+    <script src="js/controladores/ControladorVisor.js"></script>
+    <script src="js/servicios/GestorArchivos.js"></script>
+    <script src="js/servicios/ExportadorEpub.js"></script>
+    <script src="js/aplicacion.js"></script>
+
 </body>
 </html>

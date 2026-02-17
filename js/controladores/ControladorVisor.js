@@ -362,5 +362,3 @@ class ControladorVisor {
         };
     }
 }
-
-export { ControladorVisor };

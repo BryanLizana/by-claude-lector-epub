@@ -1,8 +1,3 @@
-import { GestorArchivos } from './servicios/GestorArchivos.js';
-import { ControladorEstilos } from './controladores/ControladorEstilos.js';
-import { ControladorVisor } from './controladores/ControladorVisor.js';
-import { ControladorLecturaBionica } from './controladores/ControladorLecturaBionica.js';
-
 /**
  * Clase principal de la aplicación (Fachada / Mediator)
  * Coordina la interacción entre los diferentes módulos
@@ -32,6 +27,7 @@ class AplicacionLector {
             zonaDrop: document.getElementById('zona-drop'),
             selectorArchivo: document.getElementById('selector-archivo'),
             btnAbrir: document.getElementById('btn-abrir'),
+            btnExportar: document.getElementById('btn-exportar'),
             btnIndice: document.getElementById('btn-indice'),
             btnConfiguracion: document.getElementById('btn-configuracion'),
             panelLateral: document.getElementById('panel-lateral'),
@@ -72,6 +68,7 @@ class AplicacionLector {
         this._configurarEventosEstilos();
         this._configurarEventosBionica();
         this._configurarEventosScroll();
+        this._configurarEventosExportar();
     }
 
     /**
@@ -366,10 +363,11 @@ class AplicacionLector {
      * @private
      */
     _mostrarVisor(libro) {
-        const { pantallaBienvenida, contenedorVisor, btnIndice, btnConfiguracion, barraProgreso, infoLibro } = this.elementos;
+        const { pantallaBienvenida, contenedorVisor, btnExportar, btnIndice, btnConfiguracion, barraProgreso, infoLibro } = this.elementos;
 
         pantallaBienvenida.classList.add('oculto');
         contenedorVisor.classList.remove('oculto');
+        btnExportar.classList.remove('oculto');
         btnIndice.classList.remove('oculto');
         btnConfiguracion.classList.remove('oculto');
         barraProgreso.classList.remove('oculto');
@@ -537,6 +535,33 @@ class AplicacionLector {
         setTimeout(() => {
             mensajeError.classList.remove('visible');
         }, 5000);
+    }
+
+    /**
+     * Configura el evento del botón de exportar
+     * @private
+     */
+    _configurarEventosExportar() {
+        this.elementos.btnExportar.addEventListener('click', () => this._exportarConBionica());
+    }
+
+    /**
+     * Exporta el libro actual con lectura biónica como EPUB
+     * @private
+     */
+    async _exportarConBionica() {
+        if (!this.controladorVisor || !this.controladorVisor.libroActual) return;
+
+        this._mostrarCarga(true);
+
+        try {
+            const exportador = new ExportadorEpub();
+            await exportador.exportar(this.controladorVisor.libroActual, this.controladorBionica);
+        } catch (error) {
+            this._mostrarError('Error al exportar: ' + error.message);
+        } finally {
+            this._mostrarCarga(false);
+        }
     }
 
     /**

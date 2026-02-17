@@ -54,5 +54,3 @@ class Capitulo {
         this.orden = orden || 0;
     }
 }
-
-export { AnalizadorLibro, LibroAnalizado, Capitulo };

@@ -1,5 +1,3 @@
-import { AnalizadorLibro, LibroAnalizado, Capitulo } from './AnalizadorLibro.js';
-
 /**
  * Analizador específico para archivos MOBI (SRP)
  * Responsabilidad única: parsear archivos MOBI/AZW
@@ -318,5 +316,3 @@ class AnalizadorMobi extends AnalizadorLibro {
         })];
     }
 }
-
-export { AnalizadorMobi };

@@ -1,6 +1,3 @@
-import { AnalizadorEpub } from '../analizadores/AnalizadorEpub.js';
-import { AnalizadorMobi } from '../analizadores/AnalizadorMobi.js';
-
 /**
  * Servicio para gestionar la carga de archivos (SRP + OCP)
  * Abierto para extensión: nuevos analizadores se registran sin modificar
@@ -83,5 +80,3 @@ class GestorArchivos {
         });
     }
 }
-
-export { GestorArchivos };

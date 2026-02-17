@@ -256,30 +256,27 @@ class ControladorLecturaBionica {
      * @private
      */
     _aplicarInicioMedio(palabra) {
-        const soloLetras = palabra.replace(/[^a-záéíóúüñA-ZÁÉÍÓÚÜÑ]/g, '');
-        if (soloLetras.length === 0) return this._escaparHtml(palabra);
 
-        const cantidadInicio = this._calcularCantidadResaltar(soloLetras.length);
-        const indiceMedio = Math.floor(soloLetras.length / 2);
+        if (palabra.length === 0) return this._escaparHtml(palabra);
+        let n_letter = palabra.length;
+
+        let sombreado = n_letter / 2;      
 
         let contadorLetras = 0;
         let resultado = '';
 
         for (let i = 0; i < palabra.length; i++) {
             const char = palabra[i];
-            if (/[a-záéíóúüñA-ZÁÉÍÓÚÜÑ]/.test(char)) {
-                const resaltarInicio = contadorLetras < cantidadInicio;
-                const resaltarMedio = contadorLetras === indiceMedio && soloLetras.length > 4;
+                // const resaltarInicio = contadorLetras < cantidadInicio;
+                // const resaltarMedio = contadorLetras === indiceMedio && soloLetras.length > 4;
 
-                if (resaltarInicio || resaltarMedio) {
+                if (i < sombreado) {
                     resultado += this._generarEtiquetaResaltado(char);
                 } else {
                     resultado += this._escaparHtml(char);
                 }
                 contadorLetras++;
-            } else {
-                resultado += this._escaparHtml(char);
-            }
+          
         }
 
         return resultado;
@@ -460,5 +457,3 @@ class ControladorLecturaBionica {
         }
     }
 }
-
-export { ControladorLecturaBionica };

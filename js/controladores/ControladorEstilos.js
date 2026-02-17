@@ -295,5 +295,3 @@ class ControladorEstilos {
         }
     }
 }
-
-export { ControladorEstilos };

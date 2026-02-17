@@ -1,5 +1,3 @@
-import { AnalizadorLibro, LibroAnalizado, Capitulo } from './AnalizadorLibro.js';
-
 /**
  * Analizador específico para archivos EPUB (SRP)
  * Responsabilidad única: parsear archivos EPUB
@@ -273,5 +271,3 @@ class AnalizadorEpub extends AnalizadorLibro {
         return estilosCombinados;
     }
 }
-
-export { AnalizadorEpub };
